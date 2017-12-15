@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Login</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
+        <link rel="stylesheet" href="css/w3.css" ></link>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
+        <script src="js/myscript.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <style>
+           body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+           body {font-size:16px;}
+        </style>
+    </h:head>
+    <h:body>
+    <!-- Navigation Bar -->   
+    <ui:include src="navbar.xhtml" />
+    
+    <!-- !PAGE CONTENT! -->       
+    <div class="w3-main" style="margin-left:340px;margin-right:40px">
+   
+  <!-- Contact -->
+  <div class="w3-container" id="contact" style="margin-top:100px">
+    <h2 class="w3-xxlarge w3-text-red"><b>Contact Us</b></h2>
+    <hr style="width:50px;border:5px solid red" class="w3-round"></hr>
+    
+    <form action="/action_page.php" method="post">
+      <div class="w3-section">
+          <label>University at Albany,<br/> State University of New York 1400, <br/> Washington Avenue,<br/> Albany, NY - 12222</label>
+      </div>
+    </form>  
+  </div>
+
+<!-- End page content -->
+    </div>
+</h:body>
+</html>

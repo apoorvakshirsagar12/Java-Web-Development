@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Login</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
+        <link rel="stylesheet" href="css/w3.css" ></link>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
+        <script src="js/myscript.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <style>
+           body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+           body {font-size:16px;}
+           .w3-block {width:10%}     
+        </style>
+    </h:head>
+
+    <h:body>
+        <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br/>
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
+        <label><U>#{fname}</U></label>
+        <div class="w3-container">
+            <h3 class="w3-padding-64"><b>Software <br/> Engineering</b></h3>   
+        </div>
+        <div class="w3-bar-block">
+            <a href="userMyStock.xhtml" class="w3-bar-item w3-button w3-hover-white">My Stocks</a>
+            <a href="selectManager.xhtml" class="w3-bar-item w3-button w3-hover-white">Select My Manager</a>
+            <a href="userAccount.xhtml" class="w3-bar-item w3-button w3-hover-white">My Account</a>
+            <a href="userUpdateProfile.xhtml" class="w3-bar-item w3-button w3-hover-white">Update Profile</a> 
+            <h:form>
+            <h:commandButton styleClass="w3-bar-item w3-button w3-hover-white" id="logout" value="Logout" action="#{login_bean.logout}"/> 
+           </h:form>
+        </div>
+    </nav>
+        
+    <!-- Top menu on small screens -->
+    <header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
+        <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">Menu</a>
+        <span>Software Engineering</span>
+    </header>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>   
+        
+    </h:body>
+</html>

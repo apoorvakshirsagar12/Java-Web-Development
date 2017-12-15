@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Profile</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
+        <link rel="stylesheet" href="css/w3.css" ></link>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
+        <script src="js/myscript.js"></script>
+    </h:head>
+    
+    <h:body>
+    <!-- Navigation Bar -->   
+    <ui:include src="managerNav.xhtml" />
+    
+    <!-- !PAGE CONTENT! -->       
+    <div class="w3-main" style="margin-left:340px;margin-right:40px">
+   
+  <!-- Contact -->
+  <div class="w3-container" id="success" style="margin-top:100px">
+  <h:form>
+      <div class="w3-section">
+      <legend>Search Data</legend>
+      <label for="sel1">Stock: </label>
+                        <h:selectOneMenu id="symbol" value="#{managerStockApiBean.selectedSymbol}">
+                            <f:selectItems value="#{managerStockApiBean.availableSymbols}" />
+                        </h:selectOneMenu>
+
+                        <label for="sel1">Interval: </label>
+                        <h:selectOneMenu id="interval" value="#{managerStockApiBean.selectedInterval}">
+                            <f:selectItems value="#{managerStockApiBean.availableIntervals}" />
+                        </h:selectOneMenu>
+                        <br />
+                        <h:commandButton value="Get Data" action="#{managerStockApiBean.timeseries}" styleClass="btn btn-success" />         
+      </div>
+    </h:form> 
+    <h:panelGroup rendered="#{not empty managerStockApiBean.table1Markup}">
+                    <h:outputText value="#{managerStockApiBean.table1Markup}" escape="false" styleClass="preformatted" />
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{not empty managerStockApiBean.table2Markup}">
+                    <h:outputText value="#{managerStockApiBean.table2Markup}" escape="false" styleClass="preformatted" />
+                </h:panelGroup> 
+  </div>
+
+<!-- End page content -->
+    </div>
+</h:body>
+</html>
+
+
+
