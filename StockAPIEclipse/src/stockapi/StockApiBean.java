@@ -90,6 +90,8 @@ public class StockApiBean {
         availableSymbols.add(new SelectItem("MSFT", "Microsoft"));
         availableSymbols.add(new SelectItem("SLV", "Silver"));
         availableSymbols.add(new SelectItem("TWTR", "Twitter, Inc."));
+        availableSymbols.add(new SelectItem("ORCL", "Oracle,Co."));
+        availableSymbols.add(new SelectItem("JPM", "JP Morgan,Chase & Co."));
 
         //initially populate intervals for stock api
         availableIntervals = new ArrayList<SelectItem>();
@@ -248,7 +250,7 @@ public class StockApiBean {
 			pstmt.executeUpdate();
             
             statement.close();
-            conn.close();
+            //conn.close();
             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully purchased stock",""));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -318,7 +320,7 @@ public class StockApiBean {
         			pstmt.executeUpdate();
                     
                     statement.close();
-                    conn.close();
+                    //conn.close();
                     FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully selled stock",""));
             	}
             	else if(qt < qty)

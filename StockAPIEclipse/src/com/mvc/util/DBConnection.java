@@ -4,29 +4,34 @@ import java.sql.DriverManager;
 
 public class DBConnection
 {
-	public static Connection createConnection()
+	private static DBConnection db=new DBConnection();
+	static Connection connection=null;
+	static String db_url = "jdbc:mysql://localhost:3306/my_stock";
+	//public static String hostName = "localhost";
+    //public static String portNumber = "3306";
+    //public static String databaseName = "my_stock";
+    public static String userName = "root";
+    public static String password = "root";
+    
+    private DBConnection()
+    {
+    	
+    }
+    public static Connection createConnection()
 	{
-		Connection conn = null;
-		String db_url = "jdbc:mysql://localhost:3306/my_stock"; //MySQL URL and followed by the database name
-		String db_username = "root"; //MySQL username
-		String db_password = "root"; //MySQL password
-		try 	
-		{
-			try 
-			{
-				Class.forName("com.mysql.jdbc.Driver"); //loading mysql driver 
-			} 
-			catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			} 
-			conn = DriverManager.getConnection(db_url, db_username, db_password); //attempting to connect to MySQL database
-			System.out.println("Printing connection object "+conn);
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		return conn; 
-	}
+    	try
+    	{
+    		if(connection==null)
+    		{
+    			Class.forName("com.mysql.jdbc.Driver");
+    			connection = DriverManager.getConnection(db_url,userName, password);
+    			System.out.println("Printing connection object "+connection);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return connection;
+    }
 }

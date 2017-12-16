@@ -4,10 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.annotation.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import com.mvc.dao.RegisterDao;
 import com.mvc.util.DBConnection;
+
+@SessionScoped
+
 
 public class ProfileBean {
 	String username = ((String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("username"));

@@ -9,7 +9,6 @@ public class RegisterDao
     public Connection conn = null; 
     PreparedStatement pstmt = null;
     ResultSet res = null;
-    DBConnection db = new DBConnection();
     int i,j;
     
     public void userRegister(String fname,String lname,String address,String email,String passwd,String role, String phone)
@@ -17,34 +16,29 @@ public class RegisterDao
         try
         {
             String status=null;
-            conn=db.createConnection();
+            double balance=100000;
+            conn=DBConnection.createConnection();
             if(role.equalsIgnoreCase("user"))
             {
             	status="approved";
             	System.out.println(fname+lname+address+phone+email+passwd+role+status);
-            	String query="insert into users('U_FirstName','U_LastName','U_Address','U_Phone','U_UserName','U_Password','U_Role','U_Status') "
-                        + "values('"+fname+"','"+lname+"','"+address+"','"+phone+"','"+email+"','"+passwd+"','"+role+"','"+status+"')";
+            	String query="insert into users(`U_FirstName`,`U_LastName`,`U_Address`,`U_Phone`,`U_UserName`,`U_Password`,`U_Role`,`U_Status`,`balance`) "
+                        + "values('"+fname+"','"+lname+"','"+address+"','"+phone+"','"+email+"','"+passwd+"','"+role+"','"+status+"','"+balance+"')";
                System.out.println(query);
             	pstmt.executeUpdate(query);
-               res=null;
-               res=pstmt.executeQuery("select U_Userid from users where (U_UserName='" + email + "')");
-               res.next();
-               int uid=res.getInt("U_Userid");
-               pstmt.executeUpdate("insert into tbl_user('user_id','balance') values('" + uid + "','100000')");
+            	System.out.println("record inserted successfully");
+               
             }
             if(role.equalsIgnoreCase("manager"))
             {
             	status="pending";
             	System.out.println(fname+lname+address+phone+email+passwd+role+status);
-            	String query2="insert into users('U_FirstName','U_LastName','U_Address','U_Phone','U_UserName','U_Password','U_Role','U_Status') "
-                        + "values('"+fname+"','"+lname+"','"+address+"','"+phone+"','"+email+"','"+passwd+"','"+role+"','"+status+"')";
+            	String query2="insert into users(`U_FirstName`,`U_LastName`,`U_Address`,`U_Phone`,`U_UserName`,`U_Password`,`U_Role`,`U_Status`,`balance`) "
+                        + "values('"+fname+"','"+lname+"','"+address+"','"+phone+"','"+email+"','"+passwd+"','"+role+"','"+status+"','"+balance+"')";
             	System.out.println(query2);
                 pstmt.executeUpdate(query2);
-                res=null;
-                res=pstmt.executeQuery("select U_Userid from users where (U_UserName='" + email + "')");
-                res.next();
-                int uid=res.getInt("U_Userid");
-                pstmt.executeUpdate("insert into tbl_manager('uid','balance') values('" + uid + "','100000')");
+                System.out.println("record inserted successfully");
+                
             }
              System.out.println("Data added successfully...");
              pstmt.close();
@@ -59,7 +53,7 @@ public class RegisterDao
     
     public void update(String fname,String lname,String address,String phone,String email,String username)
     {
-    	conn=db.createConnection();
+    	conn=DBConnection.createConnection();
     	String query="update users set U_UserName=?,U_FirstName=?,U_LastName=?,U_Phone=?,U_Address=? where U_UserName=?";
     	try {
 			pstmt=conn.prepareStatement(query);

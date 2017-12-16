@@ -1,15 +1,18 @@
 package com.mvc.controller;
 
 import com.mvc.dao.LoginDao;
+
 import javax.servlet.http.HttpSession;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 @ManagedBean(name="login_bean")
+@SessionScoped
 
 public class Login
 {
-    private String uname;
+	private String uname;
     private String passwd;
     private String role;
     
@@ -17,7 +20,7 @@ public class Login
   
     public Login() {
     }
-
+    
     public String getRole() {
         return role;
     }
@@ -53,17 +56,18 @@ public class Login
         {
             session = (HttpSession) facesContext.getExternalContext().getSession(true);
             facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
-            session.setAttribute("User_Id", uname);
+            //session.setAttribute("User_Id", uname);
+            
             return "adminHome?faces-redirect=true";
         }
         else
 	{
             facesContext.getExternalContext().getSessionMap().put("message", "Incorrect username or password");
-            return "index";
+            return "adminLogin?faces-redirect=true";
 	}    
     }
     
-    
+
     public String validateUser()
     {
         String result;
@@ -82,9 +86,11 @@ public class Login
             {
               session = (HttpSession) facesContext.getExternalContext().getSession(true);
                 facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
+                
               session2 = (HttpSession) facesContext.getExternalContext().getSession(true);
               facesContext.getExternalContext().getSessionMap().put("username",uname);
-                session.setAttribute("User_Id", uname);
+              
+               // session.setAttribute("username", uname);
                 return "managerMyStock?faces-redirect=true";
             }
             else
@@ -102,7 +108,11 @@ public class Login
             	System.out.println("valid");
             	session = (HttpSession) facesContext.getExternalContext().getSession(true);
                 facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
-                session.setAttribute("User_Id", uname);
+                
+                session2 = (HttpSession) facesContext.getExternalContext().getSession(true);
+                facesContext.getExternalContext().getSessionMap().put("username",uname);
+                
+                //session.setAttribute("username", uname);
                 return "userMyStock?faces-redirect=true";
             }
             else
@@ -112,7 +122,15 @@ public class Login
             }        
         }       
     }
-        
+    
+    public String adminLogout() 
+    {
+        System.out.println("in logout");
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        //FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+          //      .handleNavigation(FacesContext.getCurrentInstance(), null, "index.xhtml");
+        return "adminLogin?faces-redirect=true";
+    }
     
     public String logout() 
     {

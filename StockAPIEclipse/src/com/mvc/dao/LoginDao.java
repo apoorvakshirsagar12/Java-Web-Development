@@ -23,8 +23,7 @@ public class LoginDao
         try
 	{
         	System.out.println("in dao");
-            DBConnection db = new DBConnection();
-            conn=db.createConnection();
+            conn = DBConnection.createConnection();
             statement = conn.createStatement(); 
             resultSet = statement.executeQuery("select U_UserName,U_Password,U_Role from users where U_UserName like ('"+uname+"')");           
             while(resultSet.next())
@@ -61,8 +60,7 @@ public class LoginDao
         String statusDB = "";  
         try
 	{
-            DBConnection db = new DBConnection();
-            conn=db.createConnection();
+            conn=DBConnection.createConnection();
             statement = conn.createStatement(); 
             resultSet = statement.executeQuery("select U_Userid,U_UserName,U_Password,U_Status from users where U_UserName like ('"+uname+"')"); 
             while(resultSet.next())
@@ -104,8 +102,7 @@ public class LoginDao
 
         try
 	{
-            DBConnection db = new DBConnection();
-            conn=db.createConnection();
+            conn=DBConnection.createConnection();
             statement = conn.createStatement(); 
             resultSet = statement.executeQuery("select U_Userid,U_UserName,U_Password,U_Role from users where U_UserName like ('"+uname+"')"); 
             while(resultSet.next())
@@ -141,8 +138,7 @@ public class LoginDao
         String lnameDB = null; 
         try
         {
-            DBConnection db = new DBConnection();
-            conn=db.createConnection();
+            conn=DBConnection.createConnection();
             stmt = conn.createStatement(); 
             ResultSet res =stmt.executeQuery("select U_FirstName,U_LastName from users where U_UserName like ('"+uname+"')");
             if(res.next())
