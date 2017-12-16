@@ -14,7 +14,7 @@ import javax.faces.context.FacesContext;
 
 public class showManagerProfile 
 {
-	private String mgrName;
+	private String mgrName="";
 
 	public String getMgrName() {
 		return mgrName;

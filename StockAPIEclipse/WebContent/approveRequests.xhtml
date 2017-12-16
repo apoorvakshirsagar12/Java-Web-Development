@@ -41,29 +41,37 @@
 
 		<!-- Contact -->
 		<div class="w3-container" id="success" style="margin-top: 100px">
-			<h3 class="w3-xxlarge w3-text-red">
-				<b>Manager Registration Approval Requests</b>
-			</h3>
-			<hr style="width: 50px; border: 5px solid red" class="w3-round"></hr>
+				<h4 style="color: Red"><b>Manager Registration Approval Requests</b></h4>
+			 <div class="w3-section">
+       
+       <h:form>
+        <div class="w3-section" id="requestsData1">
+       				
+                    <h:inputText styleClass="w3-input w3-border" id="txtFname" value="#{request_bean.user_id}" required="true" 
+                    requiredMessage="Please enter user id ">
+                    </h:inputText></div>
+                    <div class="row" style="margin-left:0px;">
+                    <h:commandButton styleClass="w3-button w3-block w3-padding-large w3-red w3-margin-bottom" style="width:20%" id="submit" value="Approve" 
+                    action="#{request_bean.approveRequest}"/>
+                    
+                    <h:commandLink styleClass="w3-button w3-block w3-padding-large w3-red w3-margin-bottom" style="width:20%" 
+                    action="#{request_bean.declineRequest}" id="decsub" value="Decline"></h:commandLink>
+                    
+                    
+                 
+                    
+                    </div>
+                    <h:message for="txtFname" style="color:red" />
+        </h:form>
 
-			<form>
-				<p:remoteCommand name="myRemote"
-					actionListener="#{ManagerRequestApproval.checkRequest}" ajax="false" />
-				<div class="w3-section" id="requestsData"></div>
-				<h4 id="msg"></h4>
-				<h:commandButton onclick="checkRecord(8,'approve')" value="button" ajax="false"></h:commandButton>
-
-			</form>
+        		<h3>List of Managers:</h3>
+				<div class="w3-section" id="requestsData">
+				</div>
+				<h:messages style="color: blue; " globalOnly="true"/>
+      </div>
 		</div>
 	</div>
 
-	<script type="text/javascript">
-		function checkRecord(id, status) {
-			console.log("id " + id);
-			console.log("id " + status);
-			myRemote([{name : "U_Userid",value : id}, {name : "status",value : status}]);
-		}
-	</script>
 </h:body>
 </html>
 
