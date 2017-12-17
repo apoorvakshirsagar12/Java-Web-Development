@@ -1,6 +1,5 @@
 package com.mvc.controller;
 
-import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +21,7 @@ public class Register
     String passwd;
     String role;
     String phone;
+    double fees;
     
     public String getPhone() {
         return phone;
@@ -31,7 +31,15 @@ public class Register
         this.phone = phone;
     }
     
-    RegisterDao obj=new RegisterDao();
+    public double getFees() {
+		return fees;
+	}
+
+	public void setFees(double fees) {
+		this.fees = fees;
+	}
+
+	RegisterDao obj=new RegisterDao();
 
     public Register() {
     }
@@ -98,8 +106,8 @@ public class Register
         System.out.println("In registerUser() method...");
         try
         {
-        	System.out.println(fname+lname+address+email+passwd+role+ phone);
-            obj.userRegister(fname, lname, address, email, passwd, role, phone);
+        	System.out.println(fname+lname+address+email+passwd+role+ phone+fees);
+            obj.userRegister(fname, lname, address, email, passwd, role, phone, fees);
         }
         catch(Exception e)
         {

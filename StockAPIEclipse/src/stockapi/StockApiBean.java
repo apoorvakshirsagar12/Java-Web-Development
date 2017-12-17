@@ -237,17 +237,20 @@ public class StockApiBean {
             statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`,`amt`,`date`,`action`) "
                     + "VALUES ('" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"','" + sqlDate + "','purchase')");
             res=null;
-            res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
+            res=statement.executeQuery("select balance from tbl_user where (user_id='" + uid + "')");
             res.next();
             double bal=res.getDouble("balance");
             System.out.println(bal);
             double newBal=bal-amt;
             System.out.println(newBal);
-            String query="update users set balance=? where U_Userid=?";
+            String query="insert into tbl_user(`user_id`,`balance`,`date`) values('"+uid+"','"+newBal+"','"+sqlDate+"')";
             PreparedStatement pstmt=conn.prepareStatement(query);
-            pstmt.setDouble(1,newBal);
-			pstmt.setInt(2, uid);
 			pstmt.executeUpdate();
+			String query2="update users set balance=? where U_Userid=?";
+            PreparedStatement pstmt2=conn.prepareStatement(query2);
+            pstmt2.setDouble(1,newBal);
+			pstmt2.setInt(2, uid);
+			pstmt2.executeUpdate();
             
             statement.close();
             //conn.close();
@@ -307,17 +310,20 @@ public class StockApiBean {
                 	statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`, `amt`,`date`,`action`) "
                             + "VALUES ('" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"','" + sqlDate + "','sell')");
                     res=null;
-                    res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
+                    res=statement.executeQuery("select balance from tbl_user where (user_id='" + uid + "')");
                     res.next();
                     double bal=res.getDouble("balance");
                     System.out.println(bal);
                     double newBal=bal+amt;
                     System.out.println(newBal);
-                    String query="update users set balance=? where U_Userid=?";
+                    String query="insert into tbl_user(`user_id`,`balance`,`date`) values('"+uid+"','"+newBal+"','"+sqlDate+"')";
                     PreparedStatement pstmt=conn.prepareStatement(query);
-                    pstmt.setDouble(1,newBal);
-        			pstmt.setInt(2, uid);
         			pstmt.executeUpdate();
+                    String query2="update users set balance=? where U_Userid=?";
+                    PreparedStatement pstmt2=conn.prepareStatement(query2);
+                    pstmt2.setDouble(1,newBal);
+        			pstmt2.setInt(2, uid);
+        			pstmt2.executeUpdate();
                     
                     statement.close();
                     //conn.close();

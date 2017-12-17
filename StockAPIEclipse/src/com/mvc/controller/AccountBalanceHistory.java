@@ -3,7 +3,6 @@ package com.mvc.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -17,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.util.DBConnection;
 
-@WebServlet("/userAccountDetails")
-public class userAccountDetails extends HttpServlet {
+@WebServlet("/AccountBalanceHistory")
+public class AccountBalanceHistory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public userAccountDetails() {
+    public AccountBalanceHistory() {
         super();
     }
 
@@ -39,29 +38,23 @@ public class userAccountDetails extends HttpServlet {
             conn=DBConnection.createConnection();
             Statement statement = conn.createStatement();
             System.out.println(uid);
-            String query = "select pu.date,pu.stock_symbol,pu.price,pu.qty,pu.amt,pu.action,tu.balance from purchase pu,tbl_user tu where (pu.uid = tu.user_id) and (pu.uid='" + uid + "') and (pu.date = tu.date) order by date desc";
+            String query = "select date,balance from tbl_user where (user_id='" + uid + "') order by date desc";
             statement.executeQuery(query);
             ResultSet rs = statement.getResultSet();
             System.out.println("2");
             output = output + "<table class='table table-striped table-list' height=30px border=5px'>";	
-            output = output + "<th>Date</th><th>Stock Symbol</th><th>Price</th><th>Quantity</th><th>Amount</th><th>Action</th><th>Balance</th>";
+            output = output + "<th>Date</th><th>Balance</th>";
 
 			System.out.println("3");
 			while (rs.next()) {
 				System.out.println("5");
 				output = output + "<tr>";
 				Timestamp dt = rs.getTimestamp("date");
-				String ss = rs.getString("stock_symbol");
-				double price = rs.getDouble("price");
-                int qty = rs.getInt("qty");
-                double amt = rs.getDouble("amt");
-                String action = rs.getString("action");
-                double balance = rs.getDouble("balance");
+				double balance = rs.getDouble("balance");
                                 
 				System.out.println("Inside try");
 
-				output = output + "<td>" + dt + "</td><td>"
-						+ ss + "</td><td>$" + price + "</td><td>" + qty + "</td><td>$" + amt + "</td><td>" + action + "</td><td>" + balance + "</td>";
+				output = output + "<td>" + dt + "</td><td>$" + balance + "</td>";
 				
 				output = output + "</tr>";
 			}
@@ -77,4 +70,5 @@ public class userAccountDetails extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+
 }

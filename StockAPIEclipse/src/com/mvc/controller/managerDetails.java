@@ -40,12 +40,12 @@ public class managerDetails extends HttpServlet {
             conn=DBConnection.createConnection();
             Statement statement = conn.createStatement();
             System.out.println(uid);
-            String query = "select U_Userid,U_FirstName,U_LastName,U_Phone,U_Address from users where (U_Role='"+role+"') and (U_Status='"+status+"')";
+            String query = "select U_Userid,U_FirstName,U_LastName,U_Phone,U_Address,mgt_fees from users where (U_Role='"+role+"') and (U_Status='"+status+"')";
             statement.executeQuery(query);
             ResultSet rs = statement.getResultSet();
             System.out.println("2");
             output = output + "<table class='table table-striped table-list' height=30px border=5px'>";	
-            output = output + "<th>U_Userid</th><th>First Name</th><th>Last Name</th><th>Phone No.</th><th>Address</th>";
+            output = output + "<th>U_Userid</th><th>First Name</th><th>Last Name</th><th>Phone No.</th><th>Address</th><th>Management Fees</th>";
 
 			System.out.println("3");
 			while (rs.next()) {
@@ -56,10 +56,11 @@ public class managerDetails extends HttpServlet {
                 String lname = rs.getString("U_LastName");
                 String phone = rs.getString("U_Phone");
                 String address = rs.getString("U_Address");
+                double fees = rs.getDouble("mgt_fees");
                                 
 				System.out.println("Inside try");
 
-				output = output + "<td>" + userid + "</td><td>" + fname + "</td><td>" + lname + "</td><td>" + phone + "</td><td>" + address + "</td>";
+				output = output + "<td>" + userid + "</td><td>" + fname + "</td><td>" + lname + "</td><td>" + phone + "</td><td>" + address + "</td><td>" + fees + "</td>";
 				
 				output = output + "</tr>";
 			}

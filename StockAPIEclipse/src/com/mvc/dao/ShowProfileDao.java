@@ -51,7 +51,7 @@ public class ShowProfileDao
 		System.out.println(mid);
 		System.out.println(uid);
 		conn=DBConnection.createConnection();
-    	String query="update tbl_user set mgr_id=? where user_id=?";
+    	String query="update users set mgr_id=? where U_Userid=?";
     	try {
 			pstmt=conn.prepareStatement(query);
 			pstmt.setInt(1, mid);

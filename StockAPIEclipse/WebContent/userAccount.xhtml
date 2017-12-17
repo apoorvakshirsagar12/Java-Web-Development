@@ -26,6 +26,21 @@
 				}
 			});
 		});
+        /* $(document).ready(function() {
+			$.ajax({
+				type : 'GET',
+				url : 'AccountBalanceHistory',
+				success : function(response) {
+					if (response != null)
+						$('#requestsData2').html(response);
+					else
+						$('#msg').html("No Data");
+				},
+				failure : function(error) {
+					console.log(error);
+				}
+			});
+		}); */
 		$(document).ready(function() {
 			$.ajax({
 				type : 'GET',
@@ -58,7 +73,9 @@
       <div class="w3-section">
           <h:form>
           		<div class="w3-section" id="requestsData1"></div>
-          		<h3>History:</h3>
+          		<!-- <h4>Balance History:</h4>
+				<div class="w3-section" id="requestsData2"></div> -->
+          		<h4>History:</h4>
 				<div class="w3-section" id="requestsData"></div>
 				<h4 id="msg"></h4>
 			</h:form>

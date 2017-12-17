@@ -40,7 +40,7 @@ public class ManagerProfileDetails extends HttpServlet {
             conn=DBConnection.createConnection();
             Statement statement = conn.createStatement();
             System.out.println(mid);
-            String query = "select stock_symbol,price,qty,amt,action from purchase where (uid='" + mid + "')";
+            String query = "select symbol,price,qty,amt,type from stock_requests_manager where (mgr_id='" + mid + "')";
             statement.executeQuery(query);
             ResultSet rs = statement.getResultSet();
             System.out.println("2");
@@ -51,11 +51,11 @@ public class ManagerProfileDetails extends HttpServlet {
 			while (rs.next()) {
 				System.out.println("5");
 				output = output + "<tr>";
-				String ss = rs.getString("stock_symbol");
+				String ss = rs.getString("symbol");
 				double price = rs.getDouble("price");
                 int qty = rs.getInt("qty");
                 double amt = rs.getDouble("amt");
-                String action = rs.getString("action");
+                String action = rs.getString("type");
                                 
 				System.out.println("Inside try");
 
