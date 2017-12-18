@@ -56,7 +56,6 @@ public class Login
         {
             session = (HttpSession) facesContext.getExternalContext().getSession(true);
             facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
-            //session.setAttribute("User_Id", uname);
             
             return "adminHome?faces-redirect=true";
         }
@@ -71,7 +70,7 @@ public class Login
     public String validateUser()
     {
         String result;
-        HttpSession session,session2;
+        HttpSession session;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         System.out.println(uname);
         System.out.println(passwd);
@@ -86,12 +85,8 @@ public class Login
             {
               session = (HttpSession) facesContext.getExternalContext().getSession(true);
                 facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
-                
-              session2 = (HttpSession) facesContext.getExternalContext().getSession(true);
-              facesContext.getExternalContext().getSessionMap().put("username",uname);
-              
-               // session.setAttribute("username", uname);
-                return "managerMyStock?faces-redirect=true";
+
+                return "managerAccount?faces-redirect=true";
             }
             else
             {
@@ -108,12 +103,8 @@ public class Login
             	System.out.println("valid");
             	session = (HttpSession) facesContext.getExternalContext().getSession(true);
                 facesContext.getExternalContext().getSessionMap().put("fname",ob.getName(this.getUname()) );
-                
-                session2 = (HttpSession) facesContext.getExternalContext().getSession(true);
-                facesContext.getExternalContext().getSessionMap().put("username",uname);
-                
-                //session.setAttribute("username", uname);
-                return "userMyStock?faces-redirect=true";
+
+                return "userAccount?faces-redirect=true";
             }
             else
             {

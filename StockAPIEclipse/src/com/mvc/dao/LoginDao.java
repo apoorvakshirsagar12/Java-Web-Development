@@ -54,24 +54,34 @@ public class LoginDao
         Statement statement = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
     	HttpSession session;
-	ResultSet resultSet = null;
-	String userNameDB = "";
-	String passwordDB = "";
-        String statusDB = "";  
+    	ResultSet resultSet = null;
+    	String userNameDB = "";
+    	String passwordDB = "";
+        String statusDB = ""; 
+        String roleDB="";
         try
 	{
             conn=DBConnection.createConnection();
             statement = conn.createStatement(); 
-            resultSet = statement.executeQuery("select U_Userid,U_UserName,U_Password,U_Status from users where U_UserName like ('"+uname+"')"); 
+            resultSet = statement.executeQuery("select U_Userid,U_FirstName,U_LastName,U_Address,U_Phone,mgt_fees,U_Role,U_UserName,U_Password,U_Status from users where U_UserName like ('"+uname+"')"); 
             while(resultSet.next())
             {
             	
             	session = (HttpSession) facesContext.getExternalContext().getSession(true);
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("uid",resultSet.getString("U_Userid"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("urole",resultSet.getString("U_Role"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("first",resultSet.getString("U_FirstName"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("last",resultSet.getString("U_LastName"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("addr",resultSet.getString("U_Address"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("phn",resultSet.getString("U_Phone"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("fee",resultSet.getString("mgt_fees"));
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("email",resultSet.getString("U_UserName"));
+                
             	userNameDB = resultSet.getString("U_UserName"); 
-		passwordDB = resultSet.getString("U_Password");
+            	passwordDB = resultSet.getString("U_Password");
                 statusDB = resultSet.getString("U_Status");
-                System.out.println(resultSet.getString("U_Userid")+userNameDB+passwordDB+statusDB);
+                roleDB = resultSet.getString("U_Role");
+                System.out.println(resultSet.getString("U_Userid")+userNameDB+passwordDB+statusDB+roleDB);
             }
 	}
 	catch(SQLException e)
@@ -104,14 +114,21 @@ public class LoginDao
 	{
             conn=DBConnection.createConnection();
             statement = conn.createStatement(); 
-            resultSet = statement.executeQuery("select U_Userid,U_UserName,U_Password,U_Role from users where U_UserName like ('"+uname+"')"); 
+            resultSet = statement.executeQuery("select U_Userid,U_FirstName,U_LastName,U_Address,U_Phone,mgt_fees,U_Role,U_UserName,U_Password from users where U_UserName like ('"+uname+"')"); 
             while(resultSet.next())
             {
             	 session = (HttpSession) facesContext.getExternalContext().getSession(true);
-                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("uid",resultSet.getString("U_Userid"));
-              
-            	userNameDB = resultSet.getString("U_UserName"); 
-		passwordDB = resultSet.getString("U_Password");
+            	 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("uid",resultSet.getString("U_Userid"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("urole",resultSet.getString("U_Role"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("first",resultSet.getString("U_FirstName"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("last",resultSet.getString("U_LastName"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("addr",resultSet.getString("U_Address"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("phn",resultSet.getString("U_Phone"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("fee",resultSet.getString("mgt_fees"));
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("email",resultSet.getString("U_UserName"));
+                 
+                 userNameDB = resultSet.getString("U_UserName"); 
+                 passwordDB = resultSet.getString("U_Password");
                 roleDB = resultSet.getString("U_Role");
             }
             

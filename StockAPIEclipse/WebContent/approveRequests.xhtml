@@ -46,7 +46,9 @@
        
        <h:form>
         <div class="w3-section" id="requestsData1">
-       				
+       				<h:outputLabel for="txtFname">
+                    <h:outputText value="Enter User Id:"/>
+                    </h:outputLabel>
                     <h:inputText styleClass="w3-input w3-border" id="txtFname" value="#{request_bean.user_id}" required="true" 
                     requiredMessage="Please enter user id ">
                     </h:inputText></div>

@@ -6,10 +6,10 @@ public class DBConnection
 {
 	private static DBConnection db=new DBConnection();
 	static Connection connection=null;
-	static String db_url = "jdbc:mysql://localhost:3306/my_stock";
-	//public static String hostName = "localhost";
-    //public static String portNumber = "3306";
-    //public static String databaseName = "my_stock";
+	//static String db_url = "jdbc:mysql://localhost:3306/my_stock";
+	public static String hostName = "localhost";
+    public static String portNumber = "3306";
+    public static String databaseName = "my_stock";
     public static String userName = "root";
     public static String password = "root";
     
@@ -24,7 +24,8 @@ public class DBConnection
     		if(connection==null)
     		{
     			Class.forName("com.mysql.jdbc.Driver");
-    			connection = DriverManager.getConnection(db_url,userName, password);
+    			//connection = DriverManager.getConnection(db_url,userName, password);
+    			connection = DriverManager.getConnection("jdbc:mysql://" + hostName + ":" + portNumber + "/" + databaseName,userName, password);
     			System.out.println("Printing connection object "+connection);
     		}
     	}

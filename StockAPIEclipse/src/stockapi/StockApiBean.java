@@ -26,7 +26,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
-import com.login.DataConnect;
 import com.mvc.util.DBConnection;
 
 @ManagedBean
@@ -39,6 +38,7 @@ public class StockApiBean {
     private String symbol;
     private double price;
     private int qty;
+    
     private double amt;
     private String table1Markup;
     private String table2Markup;
@@ -145,7 +145,8 @@ public class StockApiBean {
         this.symbol = symbol;
     }
 
-    public double getPrice() {
+   
+	public double getPrice() {
         return price;
     }
 
@@ -173,7 +174,8 @@ public class StockApiBean {
         return table1Markup;
     }
 
-    public void setTable1Markup(String table1Markup) {
+  
+	public void setTable1Markup(String table1Markup) {
         this.table1Markup = table1Markup;
     }
 
@@ -185,11 +187,238 @@ public class StockApiBean {
         this.table2Markup = table2Markup;
     }
 
-    public void sendRequest(String symbol, double price, int qty, double amt)
-    {
-    	
+    
+    public String createMgrRecord(String symbol, double price, int qty, double amt) {
+        try {
+            Connection conn = DBConnection.createConnection();
+            Statement statement = conn.createStatement();
+            ResultSet res=null;
+            java.sql.Timestamp  sqlDate = new java.sql.Timestamp(new java.util.Date().getTime());
+            
+            //get userid
+            Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap().get("uid"));
+            Integer reqid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap().get("reqId"));
+            
+            System.out.println(reqid);
+            System.out.println("symbol:" + symbol);
+            System.out.println("price:" + price);
+            System.out.println("qty:" + qty);
+            System.out.println("amt:" + amt);
+            
+            res=statement.executeQuery("select uid from stock_requests_manager where (req_id = '"+reqid+"')");
+            res.next();
+            int userid=res.getInt("uid");
+            
+            //check if user has given stock symbol
+            res=null;
+            res=statement.executeQuery("select * from user_stock where (uid='" + userid + "') and (stock_symbol='"+ symbol +"')");
+            if(res.next()==false)//if not
+            {
+            	System.out.println("no user with given stock");
+            	statement.executeUpdate("insert into user_stock (`uid`,`stock_symbol`,`qty`) values ('"+userid+"','"+symbol+"','"+qty+"')");
+            	System.out.println("record inserted");
+            }
+            else//if yes
+            {
+            	System.out.println("user has given stock");
+            	int u=res.getInt("uid");
+            	String ss=res.getString("stock_symbol");
+            	int qt=res.getInt("qty");
+            	System.out.println(u+""+ss+""+qt);
+            	int new_qty=qt+qty;
+            	PreparedStatement pst=conn.prepareStatement("update user_stock set qty=? where uid=? and stock_symbol=?");
+            	pst.setInt(1, new_qty);
+            	pst.setInt(2, userid);
+            	pst.setString(3, symbol);
+            	pst.executeUpdate();
+            }
+            
+            res=null;
+            res=statement.executeQuery("select mgt_fees from users where (U_Userid='"+uid+"')");
+            res.next();
+            double fees=res.getDouble("mgt_fees");
+            
+            double commission=amt *(fees/100);
+            double newAmt=amt+commission;
+            statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`,`amt`,`date`,`action`) "
+                    + "VALUES ('" + userid + "','" + symbol + "','" + qty + "','" + price + "','" + newAmt +"','" + sqlDate + "','purchase')");
+            res=null;
+            res=statement.executeQuery("select balance from users where (U_Userid='" + userid + "')");
+            res.next();
+            double bal=res.getDouble("balance");
+            System.out.println(bal);
+            double newBal=bal-newAmt;
+            System.out.println(newBal);
+            
+            PreparedStatement pstmt=conn.prepareStatement("insert into tbl_user(`user_id`,`balance`,`date`) values('"+userid+"','"+newBal+"','"+sqlDate+"')");
+			pstmt.executeUpdate();
+			
+            PreparedStatement pstmt2=conn.prepareStatement("update users set balance=? where U_Userid=?");
+            pstmt2.setDouble(1,newBal);
+			pstmt2.setInt(2, userid);
+			pstmt2.executeUpdate();
+
+			res=null;
+            res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
+            res.next();
+            double balance=res.getDouble("balance");
+            System.out.println("mgr balance:"+balance);
+            double newBalance=balance+commission;
+            System.out.println("new mgr balance"+newBalance);
+			
+            PreparedStatement pstmt3=conn.prepareStatement("insert into tbl_user(`user_id`,`balance`,`date`) values('"+uid+"','"+newBalance+"','"+sqlDate+"')");
+			pstmt3.executeUpdate();
+			
+            PreparedStatement pstmt4=conn.prepareStatement("update users set balance=? where U_Userid=?");
+            pstmt4.setDouble(1,newBalance);
+			pstmt4.setInt(2, uid);
+			pstmt4.executeUpdate();
+			
+			PreparedStatement pst=conn.prepareStatement("update stock_requests_manager set symbol=?,price=?,qty=?,date=?,status=? where req_id=?");
+			pst.setString(1, symbol);
+			pst.setDouble(2, price);
+			pst.setInt(3, qty);
+			pst.setTimestamp(4, sqlDate);
+			pst.setString(5, "approved");
+			pst.setInt(6, reqid);
+            pst.executeUpdate();
+			
+            statement.close();
+            //conn.close();
+            FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully purchased stock",""));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "purchaseManager";
     }
     
+    public String createMgrRecord2(String symbol, double price, int qty, double amt) {
+        try {
+            //System.out.println("symbol: " + this.symbol + ", price: " + this.price + "\n");
+            //System.out.println("qty: " + this.qty + ", amt: " + this.amt + "\n");
+
+            Connection conn = DBConnection.createConnection();
+            Statement statement = conn.createStatement();
+            ResultSet res=null;
+            java.sql.Timestamp  sqlDate = new java.sql.Timestamp(new java.util.Date().getTime());
+            
+            //get userid
+            Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap().get("uid"));
+            Integer reqid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap().get("reqId"));
+          
+            System.out.println(reqid);
+            System.out.println("symbol:" + symbol);
+            System.out.println("price:" + price);
+            System.out.println("qty:" + qty);
+            System.out.println("amt:" + amt);
+            
+            res=statement.executeQuery("select uid from stock_requests_manager where (req_id = '"+reqid+"')");
+            res.next();
+            int userid=res.getInt("uid");
+            
+            res=null;
+            res=statement.executeQuery("select * from user_stock where (uid='" + userid + "') and (stock_symbol='" + symbol + "')");
+            System.out.println("check");
+            if(res.next()==false)//if not
+            {
+            	System.out.println("user doesn't have given stock");
+            	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "User doesn't have stock of this category",""));
+            	System.out.println("cannot sell");
+            }
+            else//if yes
+            {
+            	System.out.println("user has given stock");
+            	int u=res.getInt("uid");
+            	String ss=res.getString("stock_symbol");
+            	int qt=res.getInt("qty");
+            	System.out.println(u+""+ss+""+qt);
+            	
+            	if(qt >= qty)
+            	{
+            		int new_qty=qt-qty;
+                	PreparedStatement pst=conn.prepareStatement("update user_stock set qty=? where uid=? and stock_symbol=?");
+                	pst.setInt(1, new_qty);
+                	pst.setInt(2, userid);
+                	pst.setString(3, symbol);
+                	pst.executeUpdate();
+                	
+                	 res=null;
+                     res=statement.executeQuery("select mgt_fees from users where (U_Userid='"+uid+"')");
+                     res.next();
+                     double fees=res.getDouble("mgt_fees");
+                     
+                	double commission=amt *(fees/100);
+                    
+                	statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`, `amt`,`date`,`action`) "
+                            + "VALUES ('" + userid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"','" + sqlDate + "','sell')");
+                	
+                    res=null;
+                    res=statement.executeQuery("select balance from users where (U_Userid='" + userid + "')");
+                    res.next();
+                    double bal=res.getDouble("balance");
+                    System.out.println(bal);
+                    double newBal=(bal+amt)-commission;
+                    System.out.println(newBal);
+               
+                    PreparedStatement pstmt=conn.prepareStatement("insert into tbl_user(`user_id`,`balance`,`date`) values('"+userid+"','"+newBal+"','"+sqlDate+"')");
+        			pstmt.executeUpdate();
+        			
+                    PreparedStatement pstmt2=conn.prepareStatement("update users set balance=? where U_Userid=?");
+                    pstmt2.setDouble(1,newBal);
+        			pstmt2.setInt(2, userid);
+        			pstmt2.executeUpdate();
+                    
+        			res=null;
+                    res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
+                    res.next();
+                    double balance=res.getDouble("balance");
+                    System.out.println(balance);
+                    double newBalance=balance+commission;
+                    System.out.println(newBalance);
+        			
+                    PreparedStatement pstmt3=conn.prepareStatement("insert into tbl_user(`user_id`,`balance`,`date`) values('"+uid+"','"+newBalance+"','"+sqlDate+"')");
+        			pstmt3.executeUpdate();
+        			
+                    PreparedStatement pstmt4=conn.prepareStatement("update users set balance=? where U_Userid=?");
+                    pstmt4.setDouble(1,newBalance);
+        			pstmt4.setInt(2, uid);
+        			pstmt4.executeUpdate();
+        			
+        			PreparedStatement pstm=conn.prepareStatement("update stock_requests_manager set symbol=?,price=?,qty=?,date=?,status=? where req_id=?");
+        			pstm.setString(1, symbol);
+        			pstm.setDouble(2, price);
+        			pstm.setInt(3, qty);
+        			pstm.setTimestamp(4, sqlDate);
+        			pstm.setString(5, "approved");
+        			pstm.setInt(6, reqid);
+                    pstm.executeUpdate();
+        			
+                    statement.close();
+                    //conn.close();
+                    FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully selled stock",""));
+            	}
+            	else if(qt < qty)
+            	{
+            		System.out.println("not enough stocks");
+            		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "User doesn't have enough stocks to sell",""));
+            		System.out.println("cannot sell");
+            	}	
+            }
+                       
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "purchaseManager";
+    }
+
     
     public String createDbRecord(String symbol, double price, int qty, double amt) {
         try {
@@ -212,7 +441,17 @@ public class StockApiBean {
             System.out.println("qty:" + qty);
             System.out.println("amt:" + amt);
             
+            res=statement.executeQuery("select balance from users where (U_Userid='"+uid+"')");
+            res.next();
+            double ubal=res.getDouble("balance");
+            if(amt>ubal)
+            {
+            	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "You don't have sufficient balance to purchase the stock of this amount",""));
+            }
+            else
+            {
             //check if user has given stock symbol
+            res=null;
             res=statement.executeQuery("select * from user_stock where (uid='" + uid + "') and (stock_symbol='"+ symbol +"')");
             if(res.next()==false)//if not
             {
@@ -237,7 +476,7 @@ public class StockApiBean {
             statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`,`amt`,`date`,`action`) "
                     + "VALUES ('" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"','" + sqlDate + "','purchase')");
             res=null;
-            res=statement.executeQuery("select balance from tbl_user where (user_id='" + uid + "')");
+            res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
             res.next();
             double bal=res.getDouble("balance");
             System.out.println(bal);
@@ -255,7 +494,9 @@ public class StockApiBean {
             statement.close();
             //conn.close();
             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully purchased stock",""));
-        } catch (SQLException e) {
+        }
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return "purchase";
@@ -310,7 +551,7 @@ public class StockApiBean {
                 	statement.executeUpdate("INSERT INTO purchase (`uid`, `stock_symbol`, `qty`, `price`, `amt`,`date`,`action`) "
                             + "VALUES ('" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"','" + sqlDate + "','sell')");
                     res=null;
-                    res=statement.executeQuery("select balance from tbl_user where (user_id='" + uid + "')");
+                    res=statement.executeQuery("select balance from users where (U_Userid='" + uid + "')");
                     res.next();
                     double bal=res.getDouble("balance");
                     System.out.println(bal);
@@ -342,7 +583,7 @@ public class StockApiBean {
         }
         return "purchase";
     }
-
+       
     public void installAllTrustingManager() {
         TrustManager[] trustAllCerts;
         trustAllCerts = new TrustManager[]{new X509TrustManager() {
@@ -374,6 +615,7 @@ public class StockApiBean {
 
         //System.out.println("selectedItem: " + this.selectedSymbol);
         //System.out.println("selectedInterval: " + this.selectedInterval);
+        String urole = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("urole");
         String symbol = this.selectedSymbol;
         String interval = this.selectedInterval;
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=" + interval + "&apikey=" + API_KEY;
@@ -415,8 +657,16 @@ public class StockApiBean {
                             + "<td>$" + subJsonObj.getString("4. close") + "</td>"
                             + "<td>" + subJsonObj.getString("5. volume") + "</td>";
                     if (i == 0) {
+                    	if(urole.equalsIgnoreCase("user"))
+                    	{
                         String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
                         this.table2Markup += "<td><a class='btn btn-success' href='" + path + "/faces/purchase.xhtml?symbol=" + symbol + "&price=" + subJsonObj.getString("4. close") + "'>Make Transaction</a></td>";
+                    	}
+                    	else
+                    	{
+                    		String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+                            this.table2Markup += "<td><a class='btn btn-success' href='" + path + "/faces/purchaseManager.xhtml?symbol=" + symbol + "&price=" + subJsonObj.getString("4. close") + "'>Proceed</a></td>";
+                    	}
                     }
                     this.table2Markup += "</tr>";
                     i++;

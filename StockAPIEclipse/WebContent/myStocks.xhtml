@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Profile</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
+        <link rel="stylesheet" href="css/w3.css" ></link>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
+        <script src="js/myscript.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script type="text/javascript">
+		$(document).ready(function() {
+			$.ajax({
+				type : 'GET',
+				url : 'myStockDetails',
+				success : function(response) {
+					if (response != null)
+						$('#requestsData').html(response);
+					else
+						$('#msg').html("No Records");
+				},
+				failure : function(error) {
+					console.log(error);
+				}
+			});
+		});
+		</script>
+        
+    </h:head>
+    
+    <h:body>
+    <!-- Navigation Bar -->   
+    <ui:include src="userNav.xhtml" />
+    
+    <!-- !PAGE CONTENT! -->       
+    <div class="w3-main" style="margin-left:340px;margin-right:40px">
+   
+  <!-- Contact -->
+  <div class="w3-container" id="success" style="margin-top:100px">
+    
+      <div class="w3-section">
+          <h:form>
+          		<h4>My Stocks:</h4>
+				<div class="w3-section" id="requestsData"></div>
+				<h4 id="msg"></h4>
+				<a href="userMyStock.xhtml">Watch Stock</a>
+			</h:form>
+      </div>  
+  </div>
+
+<!-- End page content -->
+    </div>
+</h:body>
+</html>
+
+
+

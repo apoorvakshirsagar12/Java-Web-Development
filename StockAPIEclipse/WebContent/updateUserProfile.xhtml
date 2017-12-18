@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Register the User</title>
+        <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
+        <link rel="stylesheet" href="css/w3.css" ></link>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
+        <script src="js/myscript.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <style>
+           body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+           body {font-size:16px;}
+           .w3-block {width:10%}     
+        </style>
+    </h:head>
+    <h:body>
+    <!-- Navigation Bar -->   
+    <ui:include src="userNav.xhtml" />
+    
+    <!-- !PAGE CONTENT! -->       
+       <div class="w3-main" style="margin-left:340px;margin-right:40px">
+        <!-- Login -->
+        <div class="w3-container" id="register" style="margin-top:100px">
+           
+            <h:form id="updateForm">
+             <h:messages style="color: blue; " globalOnly="true"/>
+                <div class="w3-section">
+                    <h:outputLabel for="txtFname">
+                    <h:outputText value="First Name : "/>
+                    </h:outputLabel>
+                    <h:inputText styleClass="w3-input w3-border" id="txtFname" validatorMessage="Special symbols and numbers are not allowed here" value="#{update_bean.fname}" required="true" requiredMessage="Please enter your first name">
+                        <f:validateRegex pattern="[a-zA-Z]+"/>
+                    </h:inputText>
+                    <h:message for="txtFname" style="color:red" />
+                </div>
+                <div class="w3-section">
+                    <h:outputLabel for="txtLname">
+                    <h:outputText value="Last Name : "/>
+                    </h:outputLabel>
+                    <h:inputText styleClass="w3-input w3-border" id="txtLname" validatorMessage="Special symbols and numbers are not allowed here" value="#{update_bean.lname}" required="true" requiredMessage="Please enter your last name">
+                        <f:validateRegex pattern="[a-zA-Z]+"/>
+                    </h:inputText>
+                    <h:message for="txtLname" style="color:red" />
+                </div>
+                <div class="w3-section">
+                    <h:outputLabel for="txtPhone">
+                    <h:outputText value="Phone No. : "/>
+                    </h:outputLabel>
+                    <h:inputText styleClass="w3-input w3-border" id="txtPhone" value="#{update_bean.phone}" required="true" requiredMessage="Please enter your phone number"/>
+                    <h:message for="txtPhone" style="color:red" />
+                </div>
+                <div class="w3-section">
+                    <h:outputLabel for="txtAddress">
+                    <h:outputText value="Address : "/>
+                    </h:outputLabel>
+                    <h:inputTextarea styleClass="w3-input w3-border" id="txtAddress" value="#{update_bean.address}" required="true" requiredMessage="Please enter your address"/>
+                    <h:message for="txtAddress" style="color:red" />
+                </div>
+                
+                <div class="w3-section">
+                    <h:outputLabel for="txtEmail">
+                    <h:outputText value="Email Id : "/>
+                    </h:outputLabel>
+                    <h:inputText styleClass="w3-input w3-border" id="txtEmail" validator="EmailValidator" value="#{update_bean.email}" required="true" requiredMessage="Please enter your Email Id"/>
+                    <h:message for="txtEmail" style="color:red" />
+                </div>
+                
+            
+                <h:commandButton styleClass="w3-button w3-block w3-padding-large w3-red w3-margin-bottom" id="submit" value="Submit" action="#{update_bean.updateUser}"/>
+            </h:form>
+        </div>  
+        <!-- End page content -->
+        </div>              
+    </h:body>
+</html>
+
+
+

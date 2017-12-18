@@ -2,12 +2,14 @@ package com.mvc.dao;
 
 import java.sql.*;
 import com.mvc.util.DBConnection;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 public class RegisterDao 
 {
-    public Connection conn = null; 
-    PreparedStatement pstmt = null;
+    public static Connection conn = null; 
+    static PreparedStatement pstmt = null;
     PreparedStatement pstmt2 = null;
     ResultSet res = null;
     int i,j;
@@ -62,10 +64,13 @@ public class RegisterDao
         
     }
     
-    public void update(String fname,String lname,String address,String phone,String email,String username)
+    public static void update(String fname,String lname,String address,String phone,String email,double fees)
     {
     	conn=DBConnection.createConnection();
-    	String query="update users set U_UserName=?,U_FirstName=?,U_LastName=?,U_Phone=?,U_Address=? where U_UserName=?";
+    	Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getSessionMap().get("uid"));
+    	String query="update users set U_UserName=?,U_FirstName=?,U_LastName=?,U_Phone=?,U_Address=?,mgt_fees=? where (U_Userid='"+uid+"')";
     	try {
 			pstmt=conn.prepareStatement(query);
 			pstmt.setString(1, email);
@@ -73,14 +78,14 @@ public class RegisterDao
 			pstmt.setString(3, lname);
 			pstmt.setString(4, phone);
 			pstmt.setString(5, address);
-			pstmt.setString(6, username);
+			pstmt.setDouble(6, fees);
 
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
+    	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully updated the details",""));
     	
     }
 }

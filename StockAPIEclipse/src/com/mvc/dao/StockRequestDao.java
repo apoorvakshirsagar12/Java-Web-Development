@@ -26,15 +26,16 @@ public class StockRequestDao
     		System.out.println(uid);
     		String query="select mgr_id from users where (U_Userid='" + uid + "')";
     		res = stmt.executeQuery(query);
-    		 if(res.next()==false)//if not
+    		res.next();
+    		int mgr=res.getInt("mgr_id");
+    		 if(mgr==0)//if not
              {
              	System.out.println("no manager selected");
              	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Please select the manager first",""));
              }
     		 else
     		{
-    			 int mgr_id=res.getInt("mgr_id");
-    			 System.out.println(mgr_id);
+    			 System.out.println(mgr);
     			 res=null;
     			 res = stmt.executeQuery("select balance from users where (U_Userid='" + uid + "')");
     			 res.next();
@@ -47,8 +48,8 @@ public class StockRequestDao
     			 }
     			 else
     			 {
-    				 String query2="insert into stock_requests_manager (`uid`,`mgr_id`,`amt`,`type`) "
-    				+ "values ('"+uid+"','"+mgr_id+"','"+amount+"','"+type+"')";
+    				 String query2="insert into stock_requests_manager (`uid`,`mgr_id`,`amt`,`type`,`status`,`symbol`,`qty`) "
+    				+ "values ('"+uid+"','"+mgr+"','"+amount+"','"+type+"','pending','NA','0')";
     				 stmt.executeUpdate(query2);
     				 System.out.println("request submitted");
     				 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Your request has been submitted successfully.",""));

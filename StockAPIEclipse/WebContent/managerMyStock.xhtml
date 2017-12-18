@@ -6,6 +6,7 @@
        xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Profile</title>
+        
         <link rel="stylesheet" href="css/bootstrap.min.css"></link>        
         <link rel="stylesheet" href="css/w3.css" ></link>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins"></link>
@@ -13,7 +14,6 @@
     </h:head>
     
     <h:body>
-    <!-- Navigation Bar -->   
     <ui:include src="managerNav.xhtml" />
     
     <!-- !PAGE CONTENT! -->       
@@ -25,24 +25,24 @@
       <div class="w3-section">
       <legend>Search Data</legend>
       <label for="sel1">Stock: </label>
-                        <h:selectOneMenu id="symbol" value="#{managerStockApiBean.selectedSymbol}">
-                            <f:selectItems value="#{managerStockApiBean.availableSymbols}" />
+                        <h:selectOneMenu id="symbol" value="#{stockApiBean.selectedSymbol}">
+                            <f:selectItems value="#{stockApiBean.availableSymbols}" />
                         </h:selectOneMenu>
 
                         <label for="sel1">Interval: </label>
-                        <h:selectOneMenu id="interval" value="#{managerStockApiBean.selectedInterval}">
-                            <f:selectItems value="#{managerStockApiBean.availableIntervals}" />
+                        <h:selectOneMenu id="interval" value="#{stockApiBean.selectedInterval}">
+                            <f:selectItems value="#{stockApiBean.availableIntervals}" />
                         </h:selectOneMenu>
                         <br />
-                        <h:commandButton value="Get Data" action="#{managerStockApiBean.timeseries}" styleClass="btn btn-success" />         
+                        <h:commandButton value="Get Data" action="#{stockApiBean.timeseries}" styleClass="btn btn-success" />         
       </div>
     </h:form> 
-    <h:panelGroup rendered="#{not empty managerStockApiBean.table1Markup}">
-                    <h:outputText value="#{managerStockApiBean.table1Markup}" escape="false" styleClass="preformatted" />
+    <h:panelGroup rendered="#{not empty stockApiBean.table1Markup}">
+                    <h:outputText value="#{stockApiBean.table1Markup}" escape="false" styleClass="preformatted" />
                 </h:panelGroup>
 
-                <h:panelGroup rendered="#{not empty managerStockApiBean.table2Markup}">
-                    <h:outputText value="#{managerStockApiBean.table2Markup}" escape="false" styleClass="preformatted" />
+                <h:panelGroup rendered="#{not empty stockApiBean.table2Markup}">
+                    <h:outputText value="#{stockApiBean.table2Markup}" escape="false" styleClass="preformatted" />
                 </h:panelGroup> 
   </div>
 
